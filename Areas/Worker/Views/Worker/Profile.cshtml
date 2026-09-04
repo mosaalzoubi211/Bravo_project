@@ -1,0 +1,47 @@
+﻿@model Bravo.ViewModels.WorkerProfileViewModel
+@{
+    ViewData["Title"] = "إعدادات الملف الشخصي";
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--narrow">
+
+            <div class="section-head" style="margin-bottom: 40px; text-align: center;">
+                <span class="eyebrow"><span class="dot" aria-hidden="true" style="background-color: var(--lime);"></span>ملفي الشخصي</span>
+                <h2 style="margin-top: 8px;">أخبر العملاء عن مهاراتك.</h2>
+                <p class="lede" style="margin-top: 10px;">العملاء يستخدمون هذه المعلومات للبحث عنك وطلب خدماتك مباشرة.</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div style="background-color: rgba(163, 230, 53, 0.1); border: 1px solid var(--lime); color: var(--fg-main); padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: center;">
+                    <strong>نجاح!</strong> @TempData["SuccessMessage"]
+                </div>
+            }
+
+            <div style="background: var(--bg-surface); padding: 40px; border-radius: 12px; border: 2px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <form asp-action="Profile" method="post">
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="CategoryId" style="display: block; font-weight: 600; margin-bottom: 8px;">اختر تخصصك الرئيسي</label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" style="width: 100%; padding: 14px 16px; border: 2px solid var(--border-color); border-radius: 8px; background-color: #ffffff; color: #000; font-size: 1.1rem; appearance: auto;">
+                            <option value="" style="color: #000;">-- اختر التخصص --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 32px;">
+                        <label asp-for="Bio" style="display: block; font-weight: 600; margin-bottom: 8px;">النبذة التعريفية (تظهر في محرك البحث)</label>
+                        <textarea asp-for="Bio" rows="5" placeholder="مثال: أنا مبلط محترف بخبرة 10 سنوات، متخصص في البورسلان وتركيب السيراميك الدقيق للحمامات والمطابخ..." style="width: 100%; padding: 14px 16px; border: 2px solid var(--border-color); border-radius: 8px; background-color: #ffffff; color: #000; font-size: 1.1rem; line-height: 1.6;"></textarea>
+                        <span asp-validation-for="Bio" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--lg" style="width: 100%; justify-content: center;">
+                        حفظ التعديلات
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>

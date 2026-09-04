@@ -1,0 +1,76 @@
+﻿@model Bravo.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "إنشاء حساب جديد";
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--narrow">
+            <div class="section-head" style="text-align: center; margin-bottom: 40px;">
+                <span class="eyebrow"><span class="dot" aria-hidden="true"></span>انضم إلى منصة Bravo</span>
+                <h2>إنشاء حساب جديد</h2>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" style="color: #ff4d4f; margin-bottom: 20px;"></div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="FullName" style="display: block; font-weight: 600; margin-bottom: 8px;">الاسم الكامل</label>
+                        <input asp-for="FullName" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                        <span asp-validation-for="FullName" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <label asp-for="Email" style="display: block; font-weight: 600; margin-bottom: 8px;">البريد الإلكتروني</label>
+                            <input asp-for="Email" type="email" dir="ltr" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                            <span asp-validation-for="Email" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <label asp-for="Phone" style="display: block; font-weight: 600; margin-bottom: 8px;">رقم الهاتف</label>
+                            <input asp-for="Phone" dir="ltr" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                            <span asp-validation-for="Phone" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <label asp-for="Password" style="display: block; font-weight: 600; margin-bottom: 8px;">كلمة المرور</label>
+                            <input asp-for="Password" type="password" dir="ltr" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                            <span asp-validation-for="Password" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <label asp-for="ConfirmPassword" style="display: block; font-weight: 600; margin-bottom: 8px;">تأكيد كلمة المرور</label>
+                            <input asp-for="ConfirmPassword" type="password" dir="ltr" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                            <span asp-validation-for="ConfirmPassword" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 32px;">
+                        <label asp-for="Role" style="display: block; font-weight: 600; margin-bottom: 8px;">نوع الحساب</label>
+                        <select asp-for="Role" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main); cursor: pointer;">
+                            <option value="" style="color: #000;">اختر نوع الحساب...</option>
+                            <option value="1" style="color: #000;">عميل (طالب خدمة)</option>
+                            <option value="2" style="color: #000;">حرفي (مقدم خدمة)</option>
+                        </select>
+                        <span asp-validation-for="Role" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--lg" style="width: 100%; justify-content: center;">
+                        تسجيل الحساب
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <span style="color: var(--fg-soft);">لديك حساب بالفعل؟</span>
+                    <a asp-action="Login" style="color: var(--fg-main); font-weight: 600; text-decoration: underline;">سجل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

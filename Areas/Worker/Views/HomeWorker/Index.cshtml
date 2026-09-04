@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Bravo.Models.ServiceTask>
+@{
+    ViewData["Title"] = "لوحة تحكم الحرفي";
+}
+
+<div class="container my-5">
+    <!-- قسم الترحيب -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom" style="border-color: var(--border-color) !important;">
+        <div>
+            <h2 class="fw-bold m-0" style="color: var(--text-main);">مرحباً بك يا بطل 🛠️</h2>
+            <p class="mt-2 mb-0" style="color: var(--text-muted);">إليك ملخص أدائك وأحدث الفرص المتاحة في السوق اليوم.</p>
+        </div>
+        <a asp-area="Worker" asp-action="MyJobs" asp-controller="Worker" class="btn btn--ghost rounded-pill px-4">
+            مهامي الحالية
+        </a>
+    </div>
+
+    <!-- قسم الإحصائيات -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="brav-card p-4 text-center h-100">
+                <i class="bi bi-check2-circle fs-1 mb-2 d-block" style="color: var(--lime);"></i>
+                <h1 class="fw-bold m-0" style="color: var(--text-main);">@ViewBag.CompletedTasks</h1>
+                <p class="m-0" style="color: var(--text-muted);">مهام منجزة بنجاح</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="brav-card p-4 text-center h-100" style="border-color: #3b82f6 !important;">
+                <i class="bi bi-clock-history fs-1 mb-2 d-block text-primary"></i>
+                <h1 class="fw-bold m-0" style="color: var(--text-main);">@ViewBag.ActiveTasks</h1>
+                <p class="m-0" style="color: var(--text-muted);">طلبات قيد التنفيذ</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="brav-card p-4 text-center h-100" style="border-color: #ef4444 !important;">
+                <i class="bi bi-x-circle fs-1 mb-2 d-block text-danger"></i>
+                <h1 class="fw-bold m-0" style="color: var(--text-main);">@ViewBag.CancelledTasks</h1>
+                <p class="m-0" style="color: var(--text-muted);">مهام ملغاة</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم سوق العمل (الطلبات المتاحة) -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0 fw-bold" style="color: var(--text-main);"><i class="bi bi-briefcase me-2" style="color: var(--lime);"></i> أحدث الطلبات في السوق</h3>
+        <a asp-area="Worker" asp-action="Index" asp-controller="Worker" class="btn btn--primary btn--sm rounded-pill px-3">تصفح كل السوق</a>
+    </div>
+
+    <div class="row g-4">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="col-12 text-center p-5 rounded-4" style="background-color: rgba(255,255,255,0.02); border: 1px dashed var(--border-color);">
+                <i class="bi bi-inbox fs-1 d-block mb-3" style="color: var(--text-muted);"></i>
+                <h5 style="color: var(--text-main);">لا توجد طلبات جديدة متاحة حالياً</h5>
+                <p class="m-0" style="color: var(--text-muted);">ابقِ حسابك متصلاً، سيتم نشر طلبات جديدة قريباً.</p>
+            </div>
+        }
+        else
+        {
+            foreach (var task in Model)
+            {
+                var shortId = !string.IsNullOrEmpty(task.Id) && task.Id.Length > 6 ? task.Id.Substring(0, 6) : task.Id;
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="brav-card p-4 h-100 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge mb-2" style="background-color: rgba(163, 230, 53, 0.1); color: var(--lime); border: 1px solid var(--lime);">
+                                    @(task.Category?.Name ?? "خدمة عامة")
+                                </span>
+                                <h5 class="fw-bold m-0" style="color: var(--text-main);">طلب #@shortId</h5>
+                            </div>
+                            <small style="color: var(--text-muted);">@task.CreatedAt.ToLocalTime().ToString("MM/dd")</small>
+                        </div>
+
+                        <!-- وصف مختصر للطلب -->
+                        <p style="color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; line-height: 1.6;">
+                            @(string.IsNullOrEmpty(task.Description) ? "لا يوجد وصف مرفق مع الطلب." : (task.Description.Length > 70 ? task.Description.Substring(0, 70) + "..." : task.Description))
+                        </p>
+
+                        <hr style="border-color: var(--border-color);" />
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <small style="color: var(--text-muted);"><i class="bi bi-geo-alt me-1"></i> @(task.Location ?? "غير محدد")</small>
+                            <a asp-area="Worker" asp-controller="Worker" asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn--ghost btn--sm rounded-pill px-3">
+                                تقديم عرض
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

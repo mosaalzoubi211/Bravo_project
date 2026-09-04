@@ -1,0 +1,70 @@
+﻿@model Bravo.Models.ServiceTask
+@{
+    ViewData["Title"] = "العروض المقدمة";
+}
+
+<div class="container mt-5 mb-5">
+    <!-- ترويسة الشاشة -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold text-light">العروض المقدمة لطلبك</h2>
+            <p class="text-muted fs-5 mt-2">@Model.Description</p>
+        </div>
+    </div>
+
+    <!-- رسائل التنبيه باستخدام Bootstrap Alerts -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- فحص هل يوجد عروض أم لا -->
+    @if (Model.Offers == null || !Model.Offers.Any())
+    {
+        <div class="alert alert-secondary text-center p-5 rounded-3 border-0" style="background-color: var(--bg-surface);">
+            <h5 class="text-light">لا يوجد عروض مقدمة على هذا الطلب حتى الآن.</h5>
+            <p class="text-muted mb-0">يرجى الانتظار ريثما يتصفح الحرفيون طلبك ويقدمون عروضهم.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var offer in Model.Offers)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <!-- بطاقة العرض مبنية بـ Bootstrap -->
+                    <div class="card h-100 shadow border-0" style="background-color: var(--bg-surface); border-top: 4px solid var(--lime) !important;">
+                        <div class="card-body d-flex flex-column">
+
+                            <!-- رأس البطاقة: اسم الحرفي والسعر -->
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title text-light fw-bold mb-1">@(offer.Worker?.FullName ?? "حرفي")</h5>
+                                    <span class="badge bg-warning text-dark fs-6">⭐ @(offer.Worker?.Rating.ToString("0.0") ?? "0.0")</span>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="color: var(--lime);">@offer.ProposedPrice.ToString("0.00") JD</h4>
+                            </div>
+
+                            <!-- رسالة الحرفي -->
+                            <div class="mb-4 p-3 rounded" style="background-color: rgba(255,255,255,0.05);">
+                                <small class="text-muted d-block mb-1">رسالة الحرفي:</small>
+                                <p class="card-text text-light mb-0">@offer.WorkerMessage</p>
+                            </div>
+
+                            <!-- زر القبول (أسفل البطاقة دائماً) -->
+                            <div class="mt-auto">
+                                <form asp-action="AcceptOffer" method="post">
+                                    <input type="hidden" name="offerId" value="@offer.Id" />
+                                    <button type="submit" class="btn w-100 fw-bold py-2" style="background-color: var(--lime); color: #000;">
+                                        اختيار هذا العرض ✔️
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

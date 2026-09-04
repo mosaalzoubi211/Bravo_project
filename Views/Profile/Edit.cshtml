@@ -1,0 +1,63 @@
+﻿@model Bravo.ViewModels.UserProfileViewModel
+@{
+    ViewData["Title"] = "تعديل الملف الشخصي";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0" style="background-color: var(--bg-surface); border-radius: 16px;">
+                <div class="card-header border-0 p-4" style="background: rgba(0,0,0,0.3); border-radius: 16px 16px 0 0;">
+                    <h3 class="text-light fw-bold m-0">تعديل البيانات</h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit" method="post">
+
+                        <div class="mb-4">
+                            <label asp-for="FullName" class="form-label text-light fw-bold"></label>
+                            <input asp-for="FullName" class="form-control bg-light text-dark p-3 rounded-3" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="PhoneNumber" class="form-label text-light fw-bold"></label>
+                                <input asp-for="PhoneNumber" class="form-control bg-light text-dark p-3 rounded-3" />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="Address" class="form-label text-light fw-bold"></label>
+                                <input asp-for="Address" class="form-control bg-light text-dark p-3 rounded-3" />
+                            </div>
+                        </div>
+
+                        @if (Model.IsWorker)
+                        {
+                            <hr class="border-secondary my-4" />
+                            <h5 class="fw-bold mb-3" style="color: var(--lime);">الإعدادات المهنية</h5>
+
+                            <div class="mb-4">
+                                <label asp-for="CategoryId" class="form-label text-light fw-bold"></label>
+                                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select bg-light text-dark p-3 rounded-3">
+                                    <option value="">-- اختر تخصصك --</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Bio" class="form-label text-light fw-bold"></label>
+                                <textarea asp-for="Bio" rows="4" class="form-control bg-light text-dark p-3 rounded-3"></textarea>
+                            </div>
+                        }
+                        <input type="hidden" asp-for="IsWorker" />
+
+                        <div class="d-flex justify-content-between mt-5">
+                            <a asp-action="Index" class="btn btn-outline-light px-4 py-2 rounded-pill">إلغاء التعديل</a>
+                            <button type="submit" class="btn fw-bold px-5 py-2 rounded-pill" style="background-color: var(--lime); color: #000;">
+                                المتابعة لحفظ التعديلات ➔
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

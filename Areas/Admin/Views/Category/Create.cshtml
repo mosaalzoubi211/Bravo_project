@@ -1,0 +1,44 @@
+﻿@model Bravo.Models.Category
+@{
+    ViewData["Title"] = "إضافة تخصص جديد";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            
+            <div class="card shadow-lg border-0" style="background-color: var(--bg-surface); border-radius: 16px; border-top: 4px solid var(--lime) !important;">
+                <div class="card-body p-5">
+                    
+                    <div class="text-center mb-4">
+                        <h3 class="text-light fw-bold">إضافة تخصص جديد</h3>
+                        <p class="text-muted">هذا التخصص سيظهر فوراً للحرفيين والعملاء.</p>
+                    </div>
+
+                    <form asp-action="Create" method="post">
+                        
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label text-light fw-bold">اسم التخصص</label>
+                            <input asp-for="Name" class="form-control bg-light text-dark p-3 rounded-3" placeholder="مثال: نجار، كهربائي، حداد..." required />
+                            <span asp-validation-for="Name" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-5">
+                            <a asp-action="Index" class="btn btn-outline-light w-50 py-3 rounded-pill fw-bold">إلغاء والعودة</a>
+                            <button type="submit" class="btn w-50 py-3 rounded-pill fw-bold" style="background-color: var(--lime); color: #000;">
+                                حفظ التخصص 💾
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

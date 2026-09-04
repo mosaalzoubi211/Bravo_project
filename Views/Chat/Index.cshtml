@@ -1,0 +1,171 @@
+﻿@model IEnumerable<Bravo.Models.ChatMessage>
+@{
+    ViewData["Title"] = "المحادثة";
+    var currentUserId = ViewBag.CurrentUserId as string;
+    var taskStatus = (Bravo.Models.TaskStatus)ViewBag.TaskStatus;
+
+    // إيقاف إرسال الرسائل إذا كان الطلب منتهياً أو ملغياً
+    var isTaskClosed = taskStatus == Bravo.Models.TaskStatus.Completed || taskStatus == Bravo.Models.TaskStatus.Cancelled;
+}
+
+<style>
+    .chat-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--bg-surface);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        height: 75vh; /* ارتفاع المحادثة بالنسبة للشاشة */
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-header {
+        padding: 16px 24px;
+        border-bottom: 2px solid var(--border-color);
+        background: rgba(0,0,0,0.3);
+        border-radius: 12px 12px 0 0;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background-color: #121212;
+    }
+
+    .message-bubble {
+        max-width: 75%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        position: relative;
+        word-wrap: break-word;
+        font-size: 1.05rem;
+    }
+    /* رسائلي (تظهر على اليمين) */
+    .message-out {
+        align-self: flex-start;
+        background-color: var(--lime);
+        color: #000;
+        border-top-right-radius: 4px;
+    }
+    /* رسائل الطرف الآخر (تظهر على اليسار) */
+    .message-in {
+        align-self: flex-end;
+        background-color: #2a2a2a;
+        color: #fff;
+        border-top-left-radius: 4px;
+        border: 1px solid #444;
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 6px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .chat-input-area {
+        padding: 16px 24px;
+        border-top: 2px solid var(--border-color);
+        background: var(--bg-surface);
+        border-radius: 0 0 12px 12px;
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 14px 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 50px;
+        background: #fff;
+        color: #000;
+        outline: none;
+        font-size: 1rem;
+    }
+
+        .chat-input:focus {
+            border-color: var(--lime);
+        }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="chat-container">
+
+        <!-- رأس المحادثة -->
+        <div class="chat-header d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="text-light fw-bold mb-1">@ViewBag.ReceiverName</h4>
+                <small class="text-muted">بخصوص طلب: @(ViewBag.TaskDescription.Length > 40 ? ViewBag.TaskDescription.Substring(0, 40) + "..." : ViewBag.TaskDescription)</small>
+            </div>
+            <a href="javascript:history.back()" class="btn btn-outline-light btn-sm rounded-pill px-3">رجوع</a>
+        </div>
+
+        <!-- منطقة عرض الرسائل -->
+        <div class="chat-messages" id="chatBox">
+            @if (!Model.Any())
+            {
+                <div class="text-center text-muted mt-5">
+                    <p>لا توجد رسائل سابقة. ابدأ المحادثة الآن!</p>
+                </div>
+            }
+            else
+            {
+                foreach (var msg in Model)
+                {
+                    bool isMine = (msg.SenderId == currentUserId);
+
+                    <div class="message-bubble @(isMine ? "message-out" : "message-in")">
+                        <div>@msg.Content</div>
+                        <div class="message-time">
+                            @msg.SentAt.ToLocalTime().ToString("hh:mm tt")
+                            @if (isMine)
+                            {
+                                // علامة صح مزدوجة إذا قرأها الطرف الآخر
+                                <span>@(msg.IsRead ? "✔️✔️" : "✔️")</span>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- منطقة إدخال الرسالة -->
+        <div class="chat-input-area">
+            @if (isTaskClosed)
+            {
+                <div class="text-center text-danger fw-bold">
+                    لا يمكن إرسال رسائل لأن هذا الطلب منتهٍ أو ملغى.
+                </div>
+            }
+            else
+            {
+                <form asp-action="SendMessage" method="post" class="d-flex gap-2">
+                    <input type="hidden" name="taskId" value="@ViewBag.TaskId" />
+                    <input type="hidden" name="receiverId" value="@ViewBag.ReceiverId" />
+
+                    <input type="text" name="content" class="chat-input" placeholder="اكتب رسالتك هنا..." required autocomplete="off" />
+
+                    <button type="submit" class="btn fw-bold px-4 rounded-pill" style="background-color: var(--lime); color: #000;">
+                        إرسال ✈️
+                    </button>
+                </form>
+            }
+        </div>
+
+    </div>
+</div>
+
+<!-- سكريبت للنزول التلقائي لأسفل المحادثة -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var chatBox = document.getElementById("chatBox");
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+</script>

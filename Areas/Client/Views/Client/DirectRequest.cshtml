@@ -1,0 +1,57 @@
+﻿@model Bravo.ViewModels.CreateTaskViewModel
+@{
+    ViewData["Title"] = "طلب خدمة مباشر";
+    var worker = ViewBag.Worker as Bravo.Models.AppUser;
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--narrow">
+
+            <div class="section-head" style="text-align: center; margin-bottom: 32px;">
+                <span class="eyebrow"><span class="dot" aria-hidden="true"></span>طلب مباشر</span>
+                <h2>طلب خدمة مخصصة</h2>
+            </div>
+
+            <!-- بطاقة تعريفية للحرفي المختار -->
+            <div style="background-color: rgba(163, 230, 53, 0.05); border: 1px solid var(--lime); padding: 24px; border-radius: 12px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">سيتم إرسال الطلب إلى:</span>
+                    <h3 style="color: var(--fg-main); margin: 0;">@worker?.FullName</h3>
+                    <span style="color: var(--fg-soft); font-size: 0.9rem;">التخصص: @(worker?.Category?.Name ?? "عام")</span>
+                </div>
+                <div style="text-align: left;">
+                    <div style="color: #fbbf24; font-size: 1.2rem; font-weight: bold;">⭐ @worker?.Rating.ToString("0.0")</div>
+                </div>
+            </div>
+
+            <!-- نموذج إدخال بيانات المشكلة -->
+            <div style="background: var(--bg-surface); padding: 40px; border-radius: 12px; border: 2px solid var(--border-color);">
+                <form asp-action="DirectRequest" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="workerId" value="@worker?.Id" />
+                    <input type="hidden" asp-for="CategoryId" />
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="Description" style="display: block; font-weight: 600; margin-bottom: 8px;">اشرح مشكلتك للحرفي بدقة</label>
+                        <textarea asp-for="Description" rows="4" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 8px; background-color: #ffffff; color: #000;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <label asp-for="Location" style="display: block; font-weight: 600; margin-bottom: 8px;">العنوان التفصيلي</label>
+                            <input asp-for="Location" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 8px; background-color: #ffffff; color: #000;" />
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <label asp-for="ScheduledDate" style="display: block; font-weight: 600; margin-bottom: 8px;">الموعد المقترح</label>
+                            <input asp-for="ScheduledDate" type="datetime-local" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 8px; background-color: #ffffff; color: #000;" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--lg" style="width: 100%; justify-content: center;">
+                        إرسال الطلب المباشر
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>

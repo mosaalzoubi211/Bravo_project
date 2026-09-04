@@ -1,0 +1,173 @@
+﻿@{
+    ViewData["Title"] = "الرئيسية - Bravo";
+}
+
+
+<!-- القسم الأول: الـ Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <span class="badge mb-3 px-3 py-2" style="background: rgba(163, 230, 53, 0.1); color: var(--lime); border: 1px solid var(--lime); font-size: 0.9rem;">
+            المنصة الأولى للأعمال الحرة والصيانة 🚀
+        </span>
+        <h1 class="hero-title">أنجز مهامك باحترافية مع <span>برافو</span></h1>
+        <br />
+        <p class="hero-subtitle">
+            سواء كنت تبحث عن خبير لإصلاح عطل في منزلك، أو كنت حرفياً تبحث عن زيادة دخلك. برافو يوفر لك سوقاً مفتوحاً لتقديم العروض، ومحرك بحث ذكي للطلبات المباشرة.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            @if (!User.Identity!.IsAuthenticated)
+            {
+                <!-- تم تصحيح الروابط لتشير لمنطقة Auth -->
+                <a asp-area="Auth" asp-controller="Account" asp-action="Register" class="btn btn--primary px-5 py-3 fs-5 rounded-pill">
+                    ابدأ الآن مجاناً
+                </a>
+                <a asp-area="Auth" asp-controller="Account" asp-action="Login" class="btn btn--ghost px-5 py-3 fs-5 rounded-pill">
+                    تسجيل الدخول
+                </a>
+            }
+            else
+            {
+                <a asp-area="Client" asp-controller="HomeClient" asp-action="Index" class="btn btn--primary px-5 py-3 fs-5 rounded-pill">
+                    الذهاب للوحة التحكم
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- القسم الجديد: جولة داخل المنصة (عينة الحرفيين) 👁️ -->
+<section class="py-5" style="background-color: var(--bg-dark);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-light">نخبة الحرفيين في برافو</h2>
+            <br />
+            <p class="text-muted">خذ لمحة عن أمهر الخبراء المتاحين لخدمتك الآن</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- عينة 1 -->
+            <div class="col-md-4">
+                <div class="mock-worker-card">
+                    <div class="worker-avatar"><i class="bi bi-person-fill"></i></div>
+                    <h4 class="text-white fw-bold mb-1">أحمد محمود</h4>
+                    <p style="color: var(--lime); font-size: 0.9rem;">فني كهرباء عامة</p>
+                    <div class="d-flex justify-content-center gap-3 mb-4 text-muted small">
+                        <span><i class="bi bi-star-fill text-warning"></i> 4.9 (120 تقييم)</span>
+                        <span><i class="bi bi-check-circle-fill" style="color: var(--lime);"></i> 85 مهمة</span>
+                    </div>
+                    <!-- زر يوجه الضيف لتسجيل الدخول -->
+                    <a asp-area="Auth" asp-controller="Account" asp-action="Login" class="btn btn--ghost w-100 rounded-pill">عرض الملف والطلب</a>
+                </div>
+            </div>
+
+            <!-- عينة 2 -->
+            <div class="col-md-4">
+                <div class="mock-worker-card">
+                    <div class="worker-avatar"><i class="bi bi-tools"></i></div>
+                    <h4 class="text-white fw-bold mb-1">خالد عبد الله</h4>
+                    <p style="color: var(--lime); font-size: 0.9rem;">أعمال نجارة وتفصيل</p>
+                    <div class="d-flex justify-content-center gap-3 mb-4 text-muted small">
+                        <span><i class="bi bi-star-fill text-warning"></i> 5.0 (64 تقييم)</span>
+                        <span><i class="bi bi-check-circle-fill" style="color: var(--lime);"></i> 42 مهمة</span>
+                    </div>
+                    <a asp-area="Auth" asp-controller="Account" asp-action="Login" class="btn btn--ghost w-100 rounded-pill">عرض الملف والطلب</a>
+                </div>
+            </div>
+
+            <!-- عينة 3 -->
+            <div class="col-md-4">
+                <div class="mock-worker-card">
+                    <div class="worker-avatar"><i class="bi bi-wrench-adjustable"></i></div>
+                    <h4 class="text-white fw-bold mb-1">رامي سعيد</h4>
+                    <p style="color: var(--lime); font-size: 0.9rem;">سباكة وتمديدات صحية</p>
+                    <div class="d-flex justify-content-center gap-3 mb-4 text-muted small">
+                        <span><i class="bi bi-star-fill text-warning"></i> 4.8 (210 تقييم)</span>
+                        <span><i class="bi bi-check-circle-fill" style="color: var(--lime);"></i> 156 مهمة</span>
+                    </div>
+                    <a asp-area="Auth" asp-controller="Account" asp-action="Login" class="btn btn--ghost w-100 rounded-pill">عرض الملف والطلب</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- القسم الثالث: المميزات والنظام المزدوج -->
+<section class="py-5 my-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-light">لماذا تختار منصة برافو؟</h2>
+            <br />
+            <p class="text-muted">نظام مرن يناسب احتياجاتك تماماً</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card shadow-sm">
+                    <div class="feature-icon">📢</div>
+                    <h4 class="text-light fw-bold mb-3">سوق العطاءات المفتوح</h4>
+                    <p class="text-muted mb-0">اطرح مشكلتك للعامة، واستقبل عروض أسعار من مختلف الحرفيين. قارن بينهم واختر العرض الأنسب لميزانيتك.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card shadow-sm">
+                    <div class="feature-icon">🔍</div>
+                    <h4 class="text-light fw-bold mb-3">محرك بحث دقيق</h4>
+                    <p class="text-muted mb-0">ابحث عن الحرفي المناسب بالاسم أو التخصص الدقيق، واقرأ نبذته، ثم أرسل له "طلباً مباشراً" مخصصاً له فقط.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card shadow-sm">
+                    <div class="feature-icon">💬</div>
+                    <h4 class="text-light fw-bold mb-3">محادثة فورية آمنة</h4>
+                    <p class="text-muted mb-0">تواصل مع الحرفي أو العميل مباشرة داخل المنصة للاتفاق على أدق التفاصيل قبل البدء في تنفيذ العمل.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- القسم الرابع: كيف يعمل برافو؟ -->
+<section class="py-5" style="background-color: var(--bg-surface); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-light">كيف يعمل النظام؟</h2>
+        </div>
+
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <div class="step-number">1</div>
+                <h5 class="text-light fw-bold">اطلب أو ابحث</h5>
+                <p class="text-muted">قم بوصف المشكلة بوضوح وانشرها، أو ابحث عن الخبير المناسب وراسله.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-number">2</div>
+                <h5 class="text-light fw-bold">اتفق على السعر</h5>
+                <p class="text-muted">استقبل العروض، واختر السعر الأنسب عبر نظام العطاءات أو الطلب المباشر.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-number">3</div>
+                <h5 class="text-light fw-bold">التنفيذ والتقييم</h5>
+                <p class="text-muted">بعد إنجاز العمل، قم بإنهاء المهمة وتقييم الحرفي لضمان الجودة مستقبلاً.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- القسم الأخير: Call to Action -->
+<section class="py-5 my-5 text-center">
+    <div class="container">
+        <div style="background: var(--bg-surface); padding: 60px 20px; border-radius: 20px; border: 2px dashed var(--lime);">
+            <h2 class="text-light fw-bold mb-3">جاهز للبدء؟</h2>
+            <p class="text-muted fs-5 mb-4">انضم إلى مجتمع برافو اليوم، وكن جزءاً من أذكى منصة للخدمات.</p>
+            @if (!User.Identity!.IsAuthenticated)
+            {
+                <a asp-area="Auth" asp-controller="Account" asp-action="Register" class="btn px-5 py-3 fw-bold fs-5 rounded-pill" style="background-color: var(--lime); color: #000;">
+                    إنشاء حساب جديد
+                </a>
+            }
+        </div>
+    </div>
+</section>

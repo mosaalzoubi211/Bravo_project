@@ -1,0 +1,51 @@
+﻿@model Bravo.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--narrow">
+            <div class="section-head" style="text-align: center; margin-bottom: 40px;">
+                <span class="eyebrow"><span class="dot" aria-hidden="true"></span>أهلاً بك مجدداً</span>
+                <h2>تسجيل الدخول</h2>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" style="color: #ff4d4f; margin-bottom: 20px;"></div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="Email" style="display: block; font-weight: 600; margin-bottom: 8px;">البريد الإلكتروني</label>
+                        <input asp-for="Email" type="email" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                        <span asp-validation-for="Email" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="Password" style="display: block; font-weight: 600; margin-bottom: 8px;">كلمة المرور</label>
+                        <input asp-for="Password" type="password" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                        <span asp-validation-for="Password" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 32px; display: flex; align-items: center; gap: 8px;">
+                        <input asp-for="RememberMe" type="checkbox" style="width: 18px; height: 18px;" />
+                        <label asp-for="RememberMe" style="font-size: 14px; color: var(--fg-soft);">تذكرني في المرات القادمة</label>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--lg" style="width: 100%; justify-content: center;">
+                        دخول
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <span style="color: var(--fg-soft);">ليس لديك حساب؟</span>
+                    <a asp-action="Register" style="color: var(--fg-main); font-weight: 600; text-decoration: underline;">سجل الآن كحرفي أو عميل</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

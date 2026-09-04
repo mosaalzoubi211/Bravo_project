@@ -1,0 +1,164 @@
+﻿@model Bravo.Models.ServiceTask
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--narrow">
+
+            <div class="section-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                <div>
+                    <span class="eyebrow"><span class="dot" aria-hidden="true"></span>تفاصيل المهمة</span>
+                    <h2 style="margin-top: 8px; font-size: 1.8rem;">رقم الطلب: <span style="color: var(--fg-soft); font-size: 1.2rem;">@Model.Id.Substring(0, 8)</span></h2>
+                </div>
+                <a asp-action="MyTasks" class="btn btn--ghost btn--sm">العودة للطلبات</a>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 32px; border-radius: 12px; border: 1px solid var(--border-color);">
+
+                <!-- عرض الصور المرفقة (إن وجدت) -->
+                @if (Model.MediaFiles != null && Model.MediaFiles.Any())
+                {
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="margin-bottom: 16px; color: var(--fg-main);">الصور المرفقة:</h4>
+                        <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;">
+                            @foreach (var media in Model.MediaFiles)
+                            {
+                                <a href="@media.FileUrl" target="_blank" style="flex-shrink: 0;">
+                                    <img src="@media.FileUrl" alt="صورة المشكلة" style="width: 250px; height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+                                </a>
+                            }
+                        </div>
+                        <span style="font-size: 12px; color: var(--fg-soft);">اضغط على الصورة لعرضها بالحجم الكامل.</span>
+                    </div>
+                }
+
+                <!-- تفاصيل الطلب الأساسية -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; border-top: 1px solid var(--border-color); padding-top: 24px;">
+                    <div>
+                        <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">التخصص</span>
+                        <strong style="color: var(--fg-main); font-size: 1.1rem;">@(Model.Category?.Name ?? "غير محدد")</strong>
+                    </div>
+                    <div>
+                        <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">حالة الطلب</span>
+                        @if (Model.Status == Bravo.Models.TaskStatus.Pending)
+                        {
+                            <span style="color: #fbbf24; font-weight: 600;">قيد الانتظار ⏳</span>
+                        }
+                        else if (Model.Status == Bravo.Models.TaskStatus.Accepted)
+                        {
+                            <span style="color: #60a5fa; font-weight: 600;">تم القبول (قيد التنفيذ) 👷‍♂️</span>
+                        }
+                        else if (Model.Status == Bravo.Models.TaskStatus.Completed)
+                        {
+                            <span style="color: var(--lime); font-weight: 600;">مكتمل ✅</span>
+                        }
+                    </div>
+                    <div>
+                        <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">طريقة الدفع</span>
+                        <strong style="color: var(--fg-main);">@(Model.PaymentMethod == Bravo.Models.PaymentMethod.Cash ? "نقدي (كاش)" : "دفع إلكتروني")</strong>
+                    </div>
+                    <div>
+                        <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">الموعد المطلوب</span>
+                        <strong style="color: var(--fg-main);">@Model.ScheduledDate.ToString("yyyy/MM/dd - hh:mm tt")</strong>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 32px;">
+                    <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 8px;">العنوان التفصيلي</span>
+                    <p style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border: 1px solid #333; color: var(--fg-main);">@Model.Location</p>
+                </div>
+
+                <div style="margin-bottom: 32px;">
+                    <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 8px;">وصف المشكلة</span>
+                    <p style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border: 1px solid #333; color: var(--fg-main); line-height: 1.6;">@Model.Description</p>
+                </div>
+
+                <!-- بيانات الحرفي (تظهر فقط إذا تم قبول الطلب) -->
+                @if (Model.Worker != null)
+                {
+                    <!-- عرض السعر المتفق عليه إن وجد -->
+                    @if (Model.AgreedPrice.HasValue)
+                    {
+                        <div style="background-color: rgba(163, 230, 53, 0.05); padding: 8px 12px; border-radius: 8px; border: 1px dashed var(--lime);">
+                            <span style="display: block; color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">السعر المطلوب</span>
+                            <strong style="color: var(--lime); font-size: 1.2rem;">@Model.AgreedPrice.Value.ToString("0.00") دينار</strong>
+                        </div>
+                    }
+                    <div style="background-color: rgba(163, 230, 53, 0.05); border: 1px solid var(--lime); padding: 24px; border-radius: 8px;">
+                        <h4 style="color: var(--lime); margin-bottom: 16px;">بيانات الحرفي المنفذ</h4>
+                        <div style="display: flex; gap: 24px;">
+                            <div>
+                                <span style="display: block; color: var(--fg-soft); font-size: 0.9rem;">اسم الحرفي</span>
+                                <strong style="color: var(--fg-main);">@Model.Worker.FullName</strong>
+                            </div>
+                            <div>
+                                <span style="display: block; color: var(--fg-soft); font-size: 0.9rem;">التقييم</span>
+                                <strong style="color: #fbbf24;">⭐ @Model.Worker.Rating.ToString("0.0")</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- زر المحادثة للعميل -->
+                    @if (Model.Status == Bravo.Models.TaskStatus.Accepted && !string.IsNullOrEmpty(Model.WorkerId))
+                    {
+                        <div style="margin-top: 24px;">
+                            <a asp-controller="Chat" asp-action="Index" asp-route-taskId="@Model.Id" class="btn btn-outline-light w-100 fw-bold py-2" style="border-color: var(--lime); color: var(--lime);">
+                                محادثة الحرفي 💬
+                            </a>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+        <!-- أزرار التحكم (المحادثة، التقييم، الإلغاء) -->
+        <div style="margin-top: 24px;">
+
+            <!-- زر المحادثة للعميل -->
+            @if (Model.Status == Bravo.Models.TaskStatus.Accepted && !string.IsNullOrEmpty(Model.WorkerId))
+            {
+                <a asp-controller="Chat" asp-action="Index" asp-route-taskId="@Model.Id" class="btn btn-outline-light w-100 fw-bold py-2 mb-3" style="border-color: var(--lime); color: var(--lime);">
+                    محادثة الحرفي 💬
+                </a>
+            }
+
+            <!-- زر عرض التقييم إذا اكتملت المهمة -->
+            @if (Model.Status == Bravo.Models.TaskStatus.Completed)
+            {
+                if (!Model.ClientRating.HasValue)
+                {
+                    <a asp-action="RateWorker" asp-route-taskId="@Model.Id" class="btn w-100 fw-bold py-2" style="background-color: #fbbf24; color: #000; border-radius: 8px;">
+                        تقييم الحرفي ⭐
+                    </a>
+                }
+                else
+                {
+                    <div style="background-color: rgba(163, 230, 53, 0.05); padding: 24px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--fg-main); margin-bottom: 8px;">تقييمك لهذه المهمة</h4>
+                        <div style="color: #fbbf24; font-size: 1.5rem; margin-bottom: 8px;">
+                            @for (int i = 0; i < Model.ClientRating.Value; i++)
+                            {
+                                <span>⭐</span>
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.ClientReview))
+                        {
+                            <p style="color: var(--fg-soft); font-style: italic; m-0">"@Model.ClientReview"</p>
+                        }
+                    </div>
+                }
+            }
+            <!-- زر إلغاء الطلب -->
+            @if (Model.Status == Bravo.Models.TaskStatus.Pending || Model.Status == Bravo.Models.TaskStatus.ReceivingOffers)
+            {
+                <form asp-action="CancelTask" method="post" class="mt-3">
+                    <input type="hidden" name="taskId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-outline-danger w-100 fw-bold py-2" onclick="return confirm('هل أنت متأكد من رغبتك في إلغاء هذا الطلب نهائياً؟');" style="border-radius: 8px;">
+                        إلغاء الطلب ❌
+                    </button>
+                </form>
+            }
+        </div>
+        </section>
+</main>

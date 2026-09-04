@@ -1,0 +1,170 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Bravo.Models
+@inject SignInManager<AppUser> SignManager
+@inject UserManager<AppUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Bravo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Inter+Tight:wght@400;500;600;700&display=swap" />
+
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <!-- ملف الستايل الأساسي للموقع -->
+    <link rel="stylesheet" href="~/home/assets/css/styles.css" />
+    <!-- ملف التنسيق الخاص بهوية برافو الداكنة -->
+    <link rel="stylesheet" href="~/assets/css/bravo-dark.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#main">تخطي إلى المحتوى</a>
+
+    <header class="site-header">
+        <div class="container container--wide">
+            <nav class="nav" aria-label="Primary">
+
+                <a class="brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark" aria-hidden="true"></span> Bravo
+                </a>
+
+                <div class="nav-links" role="navigation">
+                    @if (SignManager.IsSignedIn(User) && currentUser != null)
+                    {
+                        @if (currentUser.Role == UserRole.Client)
+                        {
+                            <a asp-area="Client" asp-action="Index" asp-controller="HomeClient" class="@(currentAction == "Index" ? "active" : "")">الشاشة الرائيسة</a>
+                            <a asp-area="Client" asp-action="SearchWorkers" asp-controller="Client" class="@(currentAction == "SearchWorkers" ? "active" : "")">البحث عن حرفي</a>
+                            <a asp-area="Client" asp-action="CreateTask" asp-controller="Client" class="@(currentAction == "CreateTask" ? "active" : "")">طلب خدمة عامة</a>
+                            <a asp-area="Client" asp-action="MyTasks" asp-controller="Client" class="@(currentAction == "MyTasks" ? "active" : "")">طلباتي</a>
+                        }
+                        else if (currentUser.Role == UserRole.Worker)
+                        {
+                            <a asp-area="Worker" asp-action="Index" asp-controller="HomeWorker" class="@(currentAction == "Index" ? "active" : "")">الشاشة الرائيسة</a>
+                            <a asp-area="Worker" asp-action="Index" asp-controller="Worker" class="@(currentAction == "Index" ? "active" : "")">سوق العمل</a>
+                            <a asp-area="Worker" asp-action="DirectRequests" asp-controller="Worker" class="@(currentAction == "DirectRequests" ? "active" : "")">الطلبات المباشرة 📥</a>
+                            <a asp-area="Worker" asp-action="MyJobs" asp-controller="Worker" class="@(currentAction == "MyJobs" ? "active" : "")">مهامي قيد التنفيذ</a>
+                        }
+                        <a asp-area="" asp-controller="Profile" asp-action="Index" class="@(currentAction == "Profile" ? "active" : "")">إعدادات حسابي ⚙️</a>
+                    }
+                </div>
+
+                <div class="nav-cta-row d-flex align-items-center">
+                    @if (SignManager.IsSignedIn(User))
+                    {
+                        <!-- أيقونة الرسائل السريعة (Dropdown) -->
+                        <div class="dropdown messages-dropdown me-3">
+                            <a href="#" class="text-white text-decoration-none position-relative d-flex align-items-center justify-content-center" id="messagesDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%;">
+                                <i class="bi bi-chat-dots fs-5"></i>
+                                <!-- دائرة التنبيه الحمراء -->
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-dark" style="font-size: 0.65rem;">
+                                    2
+                                </span>
+                            </a>
+
+                            <!-- محتوى قائمة الرسائل -->
+                            <ul class="dropdown-menu shadow-sm mt-2" aria-labelledby="messagesDropdown" style="width: 320px; left: 0; right: auto;">
+                                <!-- رأس القائمة -->
+                                <li class="p-3 border-bottom d-flex justify-content-between align-items-center" style="border-color: var(--border-color) !important;">
+                                    <h6 class="m-0 fw-bold" style="color: var(--text-main);">الرسائل الأخيرة</h6>
+                                    <span class="badge" style="background-color: rgba(163, 230, 53, 0.1); color: var(--lime);">جديدة 2</span>
+                                </li>
+
+                                <!-- رسالة 1 (غير مقروءة) -->
+                                <li>
+                                    <a class="dropdown-item p-3 border-bottom d-flex align-items-start gap-3" href="#" style="border-color: var(--border-color) !important;">
+                                        <div class="msg-avatar unread flex-shrink-0">
+                                            <i class="bi bi-person-fill fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <h6 class="m-0 fw-bold" style="color: var(--text-main); font-size: 0.95rem;">أحمد محمود</h6>
+                                                <small style="color: var(--lime); font-size: 0.75rem;">الآن</small>
+                                            </div>
+                                            <p class="m-0" style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.4;">السلام عليكم، متى يمكنك القدوم لمعاينة العطل؟</p>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <!-- رسالة 2 (مقروءة) -->
+                                <li>
+                                    <a class="dropdown-item p-3 border-bottom d-flex align-items-start gap-3" href="#" style="border-color: var(--border-color) !important;">
+                                        <div class="msg-avatar flex-shrink-0">
+                                            <i class="bi bi-tools fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <h6 class="m-0" style="color: var(--text-main); font-size: 0.95rem;">خالد (نجار)</h6>
+                                                <small style="color: var(--text-muted); font-size: 0.75rem;">أمس</small>
+                                            </div>
+                                            <p class="m-0" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">تم استلام الدفعة، سأبدأ العمل غداً.</p>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <!-- زر عرض الكل -->
+                                <li class="p-2 text-center" style="background-color: var(--bg-dark);">
+                                    <a href="#" class="text-decoration-none fw-bold" style="color: var(--lime); font-size: 0.9rem;">
+                                        فتح صندوق الوارد <i class="bi bi-arrow-left ms-1"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- اسم المستخدم وزر الخروج -->
+                        <span class="me-2" style="font-weight: 500; color: var(--text-main);">@currentUser?.FullName</span>
+                        <form asp-area="Auth" asp-controller="Account" asp-action="Logout" method="post" style="display:inline;" class="ms-2">
+                            <button type="submit" class="btn btn--primary btn--sm rounded-pill px-3" style="cursor: pointer;">
+                                خروج
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- تم إبقاء أزرار الدخول للزوار كما هي -->
+                        <a class="btn btn--ghost btn--sm rounded-pill px-3 me-2" asp-area="Auth" asp-action="Register" asp-controller="Account">حساب جديد</a>
+                        <a class="btn btn--primary btn--sm rounded-pill px-4" asp-area="Auth" asp-action="Login" asp-controller="Account">
+                            دخول
+                        </a>
+                    }
+                    <button class="nav-toggle ms-3" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer"><span aria-hidden="true"></span></button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main" style="min-height: 80vh;">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container container--wide">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <span class="brand"><span class="brand-mark" aria-hidden="true"></span> Bravo</span>
+                    <p style="color: var(--text-muted);">منصة متخصصة لربط العملاء بأمهر الحرفيين والصناع المحليين بسهولة وموثوقية.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 منصة Bravo للحرفيين</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/home/assets/js/site.js" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

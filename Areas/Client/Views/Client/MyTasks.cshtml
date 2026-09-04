@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Bravo.Models.ServiceTask>
+@{
+    ViewData["Title"] = "طلباتي";
+}
+
+<style>
+    .bravo-task-card {
+        background: var(--bg-surface);
+        border: 2px solid #4a4a4a; /* إطار سميك وواضح يفصل البطاقة عن الخلفية */
+        border-radius: 14px;
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* ظل احترافي يعطي عمقاً للبطاقة */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+    }
+
+        .bravo-task-card:hover {
+            border-color: var(--lime); /* يضيء الإطار بلون المنصة عند التمرير */
+            box-shadow: 0 10px 30px rgba(163, 230, 53, 0.15); /* توهج ناعم */
+            transform: translateY(-6px); /* تأثير الارتفاع للأعلى */
+        }
+</style>
+
+<section class="py-5">
+    <div class="container">
+        <!-- عرض رسالة النجاح إن وجدت -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-4 shadow-sm" role="alert">
+                <strong>رائع!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3">
+            <h2 class="hero-headline h3 m-0">سجل طلباتي</h2>
+            <a asp-action="CreateTask" class="btn btn-dark">طلب خدمة جديدة +</a>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <!-- حالة عدم وجود طلبات -->
+            <div class="text-center py-5 bg-light rounded shadow-sm">
+                <p class="text-muted mb-3 fs-5">لا يوجد لديك أي طلبات حالياً.</p>
+                <a asp-action="CreateTask" class="btn btn-outline-dark">أنشئ طلبك الأول</a>
+            </div>
+        }
+        else
+        {
+            <!-- شبكة عرض الطلبات -->
+            <div class="row g-4">
+                @foreach (var task in Model)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="bravo-task-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-dark px-3 py-2">@task.Category?.Name</span>
+
+                                    <!-- تغيير لون حالة الطلب ديناميكياً -->
+                                    @if (task.Status == Bravo.Models.TaskStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark">قيد الانتظار</span>
+                                    }
+                                    else if (task.Status == Bravo.Models.TaskStatus.Accepted)
+                                    {
+                                        <span class="badge bg-primary">تم القبول</span>
+                                    }
+                                    else if (task.Status == Bravo.Models.TaskStatus.Completed)
+                                    {
+                                        <span class="badge bg-success">مكتمل</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">ملغي</span>
+                                    }
+                                </div>
+
+                                <!-- اقتطاع الوصف إذا كان طويلاً جداً للحفاظ على تنسيق البطاقة -->
+                                <h5 class="card-title fw-bold">
+                                    @(task.Description.Length > 60 ? task.Description.Substring(0, 60) + "..." : task.Description)
+                                </h5>
+
+                                <p class="text-muted small mb-1 mt-3">
+                                    <strong>العنوان:</strong> @task.Location
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <strong>الموعد:</strong> @task.ScheduledDate.ToString("yyyy-MM-dd HH:mm")
+                                </p>
+                            </div>
+                            <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                                <!-- سنقوم ببرمجة زر التفاصيل لاحقاً -->
+                                <a asp-action="Details" asp-route-id="@task.Id" class="btn btn--ghost" style="width: 100%; justify-content: center; padding: 10px; border-radius: 8px;">عرض التفاصيل كاملة</a>
+                                @if (task.Status == Bravo.Models.TaskStatus.ReceivingOffers)
+                                {
+                                    <a asp-action="TaskOffers" asp-route-taskId="@task.Id" class="btn btn-outline-warning w-100 fw-bold" style="border-color: #fbbf24; color: #fbbf24;">
+                                        استعراض العروض 📢
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

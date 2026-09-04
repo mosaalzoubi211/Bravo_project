@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Bravo.Models.ServiceTask>
+@{
+    ViewData["Title"] = "مهامي الحالية";
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--wide">
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div style="background-color: rgba(163, 230, 53, 0.1); border: 1px solid var(--lime); color: var(--fg-main); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                    <strong>نجاح!</strong> @TempData["SuccessMessage"]
+                </div>
+            }
+
+            <div class="section-head" style="margin-bottom: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+                <span class="eyebrow"><span class="dot" aria-hidden="true"></span>لوحة العمل</span>
+                <h2 style="margin-top: 8px;">المهام قيد التنفيذ.</h2>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div style="text-align: center; padding: 80px 20px; background: var(--bg-surface); border-radius: 12px; border: 1px dashed var(--border-color);">
+                    <p style="color: var(--fg-soft); font-size: 1.1rem; margin-bottom: 16px;">ليس لديك أي مهام مسندة حالياً.</p>
+                    <a asp-action="Dashboard" class="btn btn--ghost">تصفح الطلبات المتاحة</a>
+                </div>
+            }
+            else
+            {
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+                    @foreach (var task in Model)
+                    {
+                        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px;">
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <span style="background: #2a2a2a; color: var(--fg-main); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #333;">
+                                    @(task.Category?.Name ?? "عام")
+                                </span>
+
+                                @if (task.Status == Bravo.Models.TaskStatus.Accepted)
+                                {
+                                    <span style="color: #60a5fa; font-size: 0.85rem; font-weight: 600;">تم القبول 👷‍♂️</span>
+                                }
+                                else if (task.Status == Bravo.Models.TaskStatus.Completed)
+                                {
+                                    <span style="color: var(--lime); font-size: 0.85rem; font-weight: 600;">مكتمل ✅</span>
+                                }
+                            </div>
+
+                            <h3 style="font-size: 1.1rem; margin-bottom: 12px; line-height: 1.5; color: var(--fg-main);">
+                                @task.Description
+                            </h3>
+
+                            <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #333;">
+                                <div style="color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">
+                                    <strong>العميل:</strong> @(task.Client?.FullName ?? "غير معروف")
+                                </div>
+                                <div style="color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 4px;">
+                                    <strong>العنوان:</strong> @task.Location
+                                </div>
+                                <div style="color: var(--fg-soft); font-size: 0.9rem;">
+                                    <strong>الموعد:</strong> @task.ScheduledDate.ToString("yyyy/MM/dd - hh:mm tt")
+                                </div>
+                            </div>
+                           
+                            @if (task.AgreedPrice.HasValue)
+                            {
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(163, 230, 53, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(163, 230, 53, 0.3);">
+                                    <span style="color: var(--fg-main); font-weight: 500;">السعر المتفق عليه:</span>
+                                    <strong style="color: var(--lime); font-size: 1.1rem;">@task.AgreedPrice.Value.ToString("0.00") دينار</strong>
+                                </div>
+                            }
+                            <!-- زر المحادثة للحرفي -->
+                            @if (task.Status == Bravo.Models.TaskStatus.Accepted)
+                            {
+                                <div style="margin-bottom: 12px;">
+                                    <a asp-controller="Chat" asp-action="Index" asp-route-taskId="@task.Id" class="btn btn-outline-light w-100 fw-bold" style="border-color: var(--lime); color: var(--lime);">
+                                        تواصل مع العميل 💬
+                                    </a>
+                                </div>
+                            }
+                            <div style="margin-top: auto;">
+                                @if (task.Status == Bravo.Models.TaskStatus.Accepted)
+                                {
+                                    <form asp-controller="Worker" asp-action="CompleteTask" method="post">
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                        <button type="submit" class="btn btn--ghost" style="width: 100%; justify-content: center; border-color: var(--lime); color: var(--lime);">
+                                            إنهاء المهمة بنجاح ✔️
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</main>

@@ -1,0 +1,79 @@
+﻿@model Bravo.ViewModels.CreateTaskViewModel
+@{
+    ViewData["Title"] = "طلب خدمة جديدة";
+}
+
+<main id="main">
+    <section class="section">
+        <div class="container container--narrow">
+            <div class="section-head" style="text-align: center; margin-bottom: 40px;">
+                <span class="eyebrow"><span class="dot" aria-hidden="true"></span>خدمات Bravo</span>
+                <h2>ما هي الخدمة التي تحتاجها؟</h2>
+                <p class="lede" style="margin-top: 10px;">قم بتعبئة التفاصيل أدناه وسنقوم بربطك بأفضل الحرفيين.</p>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <form asp-action="CreateTask" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" style="color: #ff4d4f; margin-bottom: 20px;"></div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="CategoryId" style="display: block; font-weight: 600; margin-bottom: 8px;">التخصص المطلوب</label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 8px; background-color: #ffffff; color: #000000; font-weight: 600; cursor: pointer; appearance: auto;">
+                            <option value="" style="color: #000000;"> اختر التخصص </option>
+                        </select>
+                        <span asp-validation-for="CategoryId" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="Description" style="display: block; font-weight: 600; margin-bottom: 8px;">وصف المشكلة</label>
+                        <textarea asp-for="Description" rows="4" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main); resize: vertical;" placeholder="اشرح المشكلة بالتفصيل..."></textarea>
+                        <span asp-validation-for="Description" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="Location" style="display: block; font-weight: 600; margin-bottom: 8px;">العنوان التفصيلي</label>
+                        <input asp-for="Location" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" placeholder="المدينة، الحي، أقرب معلم..." />
+                        <span asp-validation-for="Location" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label asp-for="ScheduledDate" style="display: block; font-weight: 600; margin-bottom: 8px;">الموعد المقترح</label>
+                        <input asp-for="ScheduledDate" type="datetime-local" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                        <span asp-validation-for="ScheduledDate" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+
+                    <div style="margin-bottom: 32px;">
+                        <label asp-for="ImageFile" style="display: block; font-weight: 600; margin-bottom: 8px;">صورة للمشكلة (اختياري)</label>
+                        <input asp-for="ImageFile" type="file" accept="image/*" style="width: 100%; padding: 10px 16px; border: 1px dashed var(--border-color); border-radius: 8px; background: transparent; color: var(--fg-main);" />
+                        <span style="font-size: 13px; color: var(--fg-soft); margin-top: 6px; display: block;">إرفاق صورة يساعد الحرفي على فهم المشكلة بوضوح.</span>
+                    </div>
+                    <!-- خيارات الدفع -->
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px;">طريقة الدفع المفضلة</label>
+                        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                            <label style="flex: 1; min-width: 200px; border: 1px solid var(--border-color); padding: 14px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: transparent; color: var(--fg-main);">
+                                <input type="radio" asp-for="PaymentMethod" value="1" checked style="width: 18px; height: 18px; accent-color: var(--lime);" />
+                                <span style="font-weight: 500;">دفع نقدي (كاش)</span>
+                            </label>
+
+                            <label style="flex: 1; min-width: 200px; border: 1px solid var(--border-color); padding: 14px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: transparent; color: var(--fg-main);">
+                                <input type="radio" asp-for="PaymentMethod" value="2" style="width: 18px; height: 18px; accent-color: var(--lime);" />
+                                <span style="font-weight: 500;">دفع إلكتروني (محافظ/بطاقات)</span>
+                            </label>
+                        </div>
+                        <span style="font-size: 13px; color: var(--fg-soft); margin-top: 6px; display: block;">سيتم توفير بوابات الدفع الإلكتروني (مثل المحافظ الإلكترونية) قريباً.</span>
+                        <span asp-validation-for="PaymentMethod" style="color: #ff4d4f; font-size: 14px; margin-top: 4px; display: block;"></span>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--lg" style="width: 100%; justify-content: center;">
+                        إرسال الطلب
+                        <svg class="arrow" width="16" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true" style="margin-right: 8px;"><path d="M1 5h12m0 0L9 1m4 4L9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
